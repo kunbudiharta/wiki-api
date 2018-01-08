@@ -6,7 +6,7 @@ Release History
 1.2.6 (unreleased)
 ++++++++++++++++++
 
-- Nothing changed yet.
+- Fixes client usage with other locales such as arabic.
 
 
 1.2.5 (2016-07-09)

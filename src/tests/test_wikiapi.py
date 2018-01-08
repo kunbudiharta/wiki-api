@@ -60,7 +60,7 @@ class TestWiki(object):
         client = client_factory(locale=locale)
         article = client.get_article(client.find(name)[0])
 
-        assert isinstance(article.summary, str)
+        assert isinstance(article.summary, six.string_types)
 
     @pytest.mark.parametrize('locale', DATA.keys())
     def test_content(self, locale, client_factory):
@@ -178,10 +178,11 @@ class TestUnicode(object):
             'result': result,
         }
 
-    def test_search(self, locale, client_factory):
+    def test_search(self, set_up):
         # this is urlencoded.
-        assert set_up['result'] == u'Bul%C3%A5ggna'
+        assert set_up['result'] == 'Bulåggna'
 
-    def test_article(self, locale, client_factory):
+    def test_article(self, set_up):
+        client = set_up['wiki']
         # unicode errors will likely blow in your face here
         assert client.get_article(set_up['result']) is not None

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import hashlib
 import logging
 import os
@@ -178,7 +180,7 @@ class WikiApi(object):
                 return cached_resp
 
         resp = requests.get(url, params=params)
-        resp_content = resp.content.decode('utf8')
+        resp_content = resp.content
 
         if self.caching_enabled:
             self._cache_response(cached_item_path, resp_content)
