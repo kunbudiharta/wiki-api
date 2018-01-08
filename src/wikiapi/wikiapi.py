@@ -5,6 +5,7 @@ import re
 from xml.dom import minidom
 
 import six
+from six.moves.urllib.parse import unquote
 import requests
 from bs4 import BeautifulSoup
 from pyquery import PyQuery
@@ -66,7 +67,7 @@ class WikiApi(object):
         for item in items:
             link = item.getElementsByTagName('Url')[0].firstChild.data
             slug = re.findall(r'wiki/(.+)', link, re.IGNORECASE)
-            results.append(slug[0])
+            results.append(unquote(slug[0]))
         return results
 
     def get_article(self, title):
@@ -128,7 +129,8 @@ class WikiApi(object):
         """
         for result in results:
             article = self.get_article(result)
-            summary_words = article.summary.split(' ')
+            summary = article.summary if article.summary else article.content
+            summary_words = summary.split(' ')
             has_words = any(word in summary_words for word in keywords)
             if has_words:
                 return article
@@ -176,7 +178,7 @@ class WikiApi(object):
                 return cached_resp
 
         resp = requests.get(url, params=params)
-        resp_content = resp.content
+        resp_content = resp.content.decode('utf8')
 
         if self.caching_enabled:
             self._cache_response(cached_item_path, resp_content)
